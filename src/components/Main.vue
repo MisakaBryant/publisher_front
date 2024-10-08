@@ -2,15 +2,14 @@
   <el-container class="layout-container-demo" style="height: 500px">
     <el-aside width="200px">
       <el-scrollbar>
-        <el-menu :default-openeds="['1']" :default-active="'1-1'">
+        <el-menu :default-openeds="['1']" :default-active="'1-0'">
           <el-sub-menu index="1">
             <template #title>
               <el-icon><message /></el-icon>项目类型
             </template>
             <el-menu-item-group>
               <template #title>Group 1</template>
-              <el-menu-item index="1-1" @click="listProject('java')">java</el-menu-item>
-              <el-menu-item index="1-2" @click="listProject('web')">web</el-menu-item>
+              <el-menu-item v-for="(item, index) in projectType" :key="item" :index="'1-'+index.toString()" @click="listProject(item)">{{ item }}</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group title="Group 2">
               <el-menu-item index="1-3">Option 3</el-menu-item>
@@ -61,7 +60,7 @@
     <el-container>
       <el-header>
         <el-row :gutter="20" style="display: flex; align-content: center; height: 100%">
-          <el-col :span="10">
+          <el-col :span="22">
             <span>Publisher</span>
           </el-col>
           <el-col :span="2">
@@ -89,14 +88,18 @@
 import { ref } from 'vue'
 import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
 import {list_project} from "@/js/api.js";
-import JavaProjectForm from "@/components/JavaProjectForm.vue";
+import JavaProjectForm from "@/components/form/JavaProjectForm.vue";
 import JavaProjectTable from "@/components/table/JavaProjectTable.vue";
 
+const projectType = ref(["java", "web"])
 const type = ref("")
 const projectData = ref([])
 const showJavaProjectForm = ref(false)
 
 const listProject = async (t) => {
+  if (t === "") {
+    return
+  }
   type.value = t
   const res = await list_project(t)
   projectData.value = res.data
@@ -111,6 +114,10 @@ const addProject = () => {
 }
 
 listProject("java")
+
+const interval = setInterval(() => {
+  listProject(type.value)
+}, 1000)
 
 </script>
 

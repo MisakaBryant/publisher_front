@@ -53,3 +53,39 @@ export const update_project = (project_type, project_id, project) => {
     data: JSON.stringify(project, replacer)
   })
 }
+
+export const delete_project = (project_type, project_id) => {
+  return request({
+    url: '/project',
+    method: 'delete',
+    params: {
+      project_type: project_type,
+      project_id: project_id
+    }
+  })
+}
+
+export const run_project = (project_type, project_id, idx) => {
+  return request({
+    url: '/run',
+    method: 'post',
+    params: {
+      project_type: project_type,
+      project_id: project_id,
+      idx: idx,
+      cmd: "run"
+    }
+  })
+}
+
+export const stop_project = (project_type, project_id) => {
+  return request({
+    url: '/run',
+    method: 'post',
+    params: {
+      project_type: project_type,
+      project_id: project_id,
+      cmd: "stop"
+    }
+  })
+}

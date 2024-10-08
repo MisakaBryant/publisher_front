@@ -49,14 +49,14 @@
       <el-button type="primary" @click="addProperty">AddProperty</el-button>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">OK</el-button>
-      <el-button @click="onCancel">Cancel</el-button>
+      <el-button type="primary" @click="onSubmit">确定</el-button>
+      <el-button @click="onCancel">取消</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup>
-import {defineEmits, onMounted, reactive} from 'vue'
+import {defineEmits, onMounted, reactive, watch} from 'vue'
 import {add_project, get_project, update_project} from "@/js/api.js";
 import {ElMessage} from "element-plus";
 
@@ -111,13 +111,13 @@ const onSubmit = () => {
     // update project
     update_project("java", props.project_id, project).then(res => {
       ElMessage.success("更新成功")
-      location.reload()
+      emit("close")
     })
   } else {
     // create project
     add_project("java", project).then(res => {
       ElMessage.success("创建成功")
-      location.reload()
+      emit("close")
     })
   }
 }
@@ -133,9 +133,14 @@ onMounted(() => {
       // 通过 project 对象填充表单
       projectForm.java_path = res.data.java_path
       projectForm.jar_path = res.data.jar_path
-      projectForm.config = res.data.config.map(item => ({key: item[0], value: item[1]}))
-      projectForm.properties = res.data.properties.map(item => ({key: item[0], value: item[1]}))
+      projectForm.config = Object.entries(res.data.config).map(item => ({key: item[0], value: item[1]}))
+      projectForm.properties = Object.entries(res.data.properties).map(item => ({key: item[0], value: item[1]}))
     })
+  } else {
+    projectForm.java_path = ""
+    projectForm.jar_path = ""
+    projectForm.config = []
+    projectForm.properties = []
   }
 })
 

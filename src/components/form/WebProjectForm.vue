@@ -9,6 +9,11 @@
     <el-form-item label="解压缩路径" prop="dist_path">
       <el-input v-model="projectForm.dist_path"></el-input>
     </el-form-item>
+    <el-form-item label="后置脚本" prop="after_script">
+      <el-input v-model="projectForm.after_script"
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4 }"></el-input>
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">确定</el-button>
       <el-button @click="onCancel">取消</el-button>
@@ -33,7 +38,8 @@ const emit = defineEmits(['close']);
 const projectForm = reactive({
   project_name: "",
   zip_path: "",
-  dist_path: ""
+  dist_path: "",
+  after_script: ""
 })
 
 const onSubmit = () => {
@@ -43,6 +49,7 @@ const onSubmit = () => {
     project_name: projectForm.project_name,
     zip_path: projectForm.zip_path,
     dist_path: projectForm.dist_path,
+    after_script: projectForm.after_script
   }
   if (props.project_id) {
     // update project
@@ -71,11 +78,13 @@ onMounted(() => {
       projectForm.project_name = res.data.project_name
       projectForm.zip_path = res.data.zip_path
       projectForm.dist_path = res.data.dist_path
+      projectForm.after_script = res.data.after_script
     })
   } else {
     projectForm.project_name = ""
     projectForm.zip_path = ""
     projectForm.dist_path = ""
+    projectForm.after_script = ""
   }
 })
 

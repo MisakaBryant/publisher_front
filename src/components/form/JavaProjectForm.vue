@@ -1,5 +1,8 @@
 <template>
   <el-form :model="projectForm" label-width="auto">
+    <el-form-item label="Project Name" prop="project_name">
+      <el-input v-model="projectForm.project_name"></el-input>
+    </el-form-item>
     <el-form-item label="Java Path" prop="java_path">
       <el-input v-model="projectForm.java_path"></el-input>
     </el-form-item>
@@ -70,6 +73,7 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 
 const projectForm = reactive({
+  project_name: "",
   java_path: "",
   jar_path: "",
   config: [],
@@ -102,6 +106,7 @@ const onSubmit = () => {
   // 通过表单构建 project 对象
   console.log(projectForm)
   const project = {
+    project_name: projectForm.project_name,
     java_path: projectForm.java_path,
     jar_path: projectForm.jar_path,
     config: new Map(projectForm.config.filter(item => item.key !== "").map(item => [item.key, item.value])),
@@ -127,16 +132,18 @@ const onCancel = () => {
 }
 
 onMounted(() => {
-  if (props.project_id) {
+  if (props.project_id !== "") {
     // get project
     get_project("java", props.project_id).then(res => {
       // 通过 project 对象填充表单
+      projectForm.project_name = res.data.project_name
       projectForm.java_path = res.data.java_path
       projectForm.jar_path = res.data.jar_path
       projectForm.config = Object.entries(res.data.config).map(item => ({key: item[0], value: item[1]}))
       projectForm.properties = Object.entries(res.data.properties).map(item => ({key: item[0], value: item[1]}))
     })
   } else {
+    projectForm.project_name = ""
     projectForm.java_path = ""
     projectForm.jar_path = ""
     projectForm.config = []

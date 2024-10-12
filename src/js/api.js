@@ -10,6 +10,13 @@ export const list_project = (project_type) => {
   })
 }
 
+export const get_sys_info = () => {
+  return request({
+    url: '/system',
+    method: 'get'
+  })
+}
+
 export const get_project = (project_type, project_id) => {
   return request({
     url: '/project',
@@ -19,7 +26,6 @@ export const get_project = (project_type, project_id) => {
       project_id: project_id
     }
   })
-
 }
 
 const replacer = (key, value) => {

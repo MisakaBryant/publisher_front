@@ -28,9 +28,12 @@
     <el-table-column prop="dist_path" label="解压缩路径"></el-table-column>
     <el-table-column label="后置脚本">
       <template #default="scope">
-        <el-popover v-if="scope.row.after_script !== ''" placement="bottom" title="shell" width="300" trigger="click" :content="scope.row.after_script">
+        <el-popover v-if="scope.row.after_script !== ''" placement="bottom" title="shell" width="300" trigger="click">
           <template #reference>
             <el-text>点击查看</el-text>
+          </template>
+          <template #default>
+            <el-text style="white-space: pre-wrap;">{{scope.row.after_script}}</el-text>
           </template>
         </el-popover>
       </template>
